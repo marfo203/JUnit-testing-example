@@ -8,9 +8,21 @@ public class StateAndReward {
 		String state2 = "state 2";
 		String state3 = "state 3";
 		String state4 = "state 4";
-		int discAngle = discretize(angle, 2, 0, 1);
+		int discAngle = discretize(angle, 36, -Math.PI, Math.PI);
 		
-		System.out.println(discAngle);
+		// System.out.println(discAngle);
+		
+		if(discAngle > 0 && discAngle <= 15) {
+			
+		}else if (discAngle > 15 && discAngle <= 30) {
+			
+			
+		}else if (discAngle > 30 && discAngle <= 45) {
+			
+			
+		}else if (discAngle > 45 && discAngle <= 60) {
+			
+		}
 		
 
 		return state1;
@@ -22,6 +34,8 @@ public class StateAndReward {
 		/* TODO: IMPLEMENT THIS FUNCTION */
 
 		double reward = 0;
+		
+		reward = (Math.PI - Math.abs(angle));
 
 		return reward;
 	}

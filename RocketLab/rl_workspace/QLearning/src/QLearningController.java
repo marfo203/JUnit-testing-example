@@ -84,9 +84,52 @@ public class QLearningController extends Controller {
 
 	/* Performs the chosen action */
 	void performAction(int action) {
+		
+		
+		
 
 		/* Fire zeh rockets! */
 		/* TODO: Remember to change NUM_ACTIONS constant to reflect the number of actions (including 0, no action) */
+			if (action == 0) {
+				
+				leftEngine.setBursting(false);
+				rightEngine.setBursting(false);
+				middleEngine.setBursting(true);
+			}else if (action == 1) {
+				leftEngine.setBursting(true);
+				rightEngine.setBursting(false);
+				middleEngine.setBursting(false);
+				
+			}else if (action == 2) {
+				leftEngine.setBursting(false);
+				rightEngine.setBursting(true);
+				middleEngine.setBursting(false);
+				
+			}else if (action == 3) {
+				leftEngine.setBursting(false);
+				rightEngine.setBursting(true);
+				middleEngine.setBursting(false);
+				
+			}else if (action == 4) {
+				leftEngine.setBursting(false);
+				rightEngine.setBursting(true);
+				middleEngine.setBursting(true);
+				
+			}else if (action == 5) {
+				leftEngine.setBursting(true);
+				rightEngine.setBursting(true);
+				middleEngine.setBursting(false);
+				
+			}else if (action == 6) {
+				resetRockets();
+				
+			}else if (action == 7) {
+				leftEngine.setBursting(true);
+				rightEngine.setBursting(true);
+				middleEngine.setBursting(true);
+				
+			}
+		
 		
 		/* TODO: IMPLEMENT THIS FUNCTION */
 		
@@ -95,7 +138,7 @@ public class QLearningController extends Controller {
 	/* Main decision loop. Called every iteration by the simulator */
 	public void tick(int currentTime) {
 		iteration++;
-		System.out.println("Angle: " + (angle.getValue()));
+		// System.out.println("Angle: " + (angle.getValue()));
 		if (!paused) {
 			String new_state = StateAndReward.getStateAngle(angle.getValue(), vx.getValue(), vy.getValue());
 
@@ -106,6 +149,8 @@ public class QLearningController extends Controller {
 			}
 			double previous_reward = StateAndReward.getRewardAngle(previous_angle, previous_vx, previous_vy);
 			action_counter = 0;
+			
+			// System.out.println("preev state: " + previous_state);
 
 			/* The agent is in a new state, do learning and action selection */
 			if (previous_state != null) {
@@ -124,6 +169,15 @@ public class QLearningController extends Controller {
 				} 
 
 				/* TODO: IMPLEMENT Q-UPDATE HERE! */
+				
+				double oldQ = Qtable.get(prev_stateaction);
+				double alpha = alpha(Ntable.get(prev_stateaction));
+				
+				double newQ = oldQ + alpha*(previous_reward + (GAMMA_DISCOUNT_FACTOR*getMaxActionQValue(new_state)) - Qtable.get(prev_stateaction));
+				
+				Qtable.put(prev_stateaction, newQ);
+				//System.out.println("newQ: " + newQ);
+				
 				
 				/* See top for constants and below for helper functions */
 				
@@ -187,6 +241,7 @@ public class QLearningController extends Controller {
 		if (explore && Math.abs(rand.nextDouble()) < explore_chance) {
 			/* Taking random exploration action! */
 			action = Math.abs(rand. nextInt()) % NUM_ACTIONS;
+			System.out.println("action1: " + action);
 			return action;
 		}
 
@@ -203,6 +258,7 @@ public class QLearningController extends Controller {
 				action = i;
 			}
 		}
+		System.out.println("action2: " + action);
 		return action;
 	}
 
