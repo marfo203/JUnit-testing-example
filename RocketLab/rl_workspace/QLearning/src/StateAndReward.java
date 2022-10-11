@@ -8,24 +8,22 @@ public class StateAndReward {
 		String state2 = "state 2";
 		String state3 = "state 3";
 		String state4 = "state 4";
-		int discAngle = discretize(angle, 36, -Math.PI, Math.PI);
-		
-		// System.out.println(discAngle);
-		
-		if(discAngle > 0 && discAngle <= 15) {
-			
-		}else if (discAngle > 15 && discAngle <= 30) {
-			
-			
-		}else if (discAngle > 30 && discAngle <= 45) {
-			
-			
-		}else if (discAngle > 45 && discAngle <= 60) {
-			
-		}
-		
+		int discAngle = discretize(angle, 4, -Math.PI, Math.PI);
 
-		return state1;
+		// System.out.println(discAngle);
+
+		if (discAngle == 0) {
+			return state1;
+		} else if (discAngle == 1) {
+
+			return state2;
+		} else if (discAngle == 2) {
+
+			return state3;
+		} else if (discAngle == 3) {
+			return state4;
+		}
+		return null;
 	}
 
 	/* Reward function for the angle controller */
@@ -34,8 +32,8 @@ public class StateAndReward {
 		/* TODO: IMPLEMENT THIS FUNCTION */
 
 		double reward = 0;
-		
-		reward = (Math.PI - Math.abs(angle));
+
+		reward = (Math.PI + Math.PI / 3 - Math.abs(angle));
 
 		return reward;
 	}
@@ -45,8 +43,36 @@ public class StateAndReward {
 
 		/* TODO: IMPLEMENT THIS FUNCTION */
 
-		String state = "OneStateToRuleThemAll2";
+		String state = "";
+		String ver = "";
+		String hor = "";
 
+		int discVer = discretize(vy, 2, 0, 0);
+		int discHor = discretize(vx, 2, 0, 0);
+
+		// System.out.println("discVer: " + discVer);
+		if (vy != 0) {
+			if (discVer == 0) {
+				ver = "up";
+
+				System.out.println(vy + " Ver Upp: " + discVer);
+			} else {
+				ver = "down";
+				System.out.println(vy + " Ver down: " + discVer);
+			}
+		} else
+			ver = "";
+
+		if (vx != 0) {
+			if (discHor == 0) {
+				hor = "left";
+			} else {
+				hor = "right";
+			}
+		} else
+			hor = "";
+
+		state = getStateAngle(angle, vx, vy) + ver + hor;
 		return state;
 	}
 
@@ -56,8 +82,27 @@ public class StateAndReward {
 		/* TODO: IMPLEMENT THIS FUNCTION */
 
 		double reward = 0;
+		reward = getRewardAngle(angle, vy, vx);
+		int vyZero = 0;
+		
+		int discVy = discretize(vy,60,0,0);
+		System.out.println(discVy);
+		
+		if (discVy<30  && discVy > 0) {
+			vyZero = 20;
+			System.out.println("Nu är jag helt stimma mother fucker");
+		}
 
-		return reward;
+		// double yReward = 30 - 3 * Math.abs(vy);
+
+		double compReward = reward/1.5 - 10*Math.abs(vx) + vyZero-Math.abs(vy)
+		;
+
+		// System.out.println("compRew: " + compReward + ", reward: " + reward + ", vy
+		// abs: " + 2 * Math.abs(vy));
+
+		// System.out.println(yReward);
+		return compReward;
 	}
 
 	// ///////////////////////////////////////////////////////////
