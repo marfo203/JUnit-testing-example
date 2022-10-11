@@ -44,35 +44,18 @@ public class StateAndReward {
 		/* TODO: IMPLEMENT THIS FUNCTION */
 
 		String state = "";
-		String ver = "";
-		String hor = "";
+	
 
-		int discVer = discretize(vy, 2, 0, 0);
-		int discHor = discretize(vx, 2, 0, 0);
+		int discVer = discretize(vy, 6, -5, 5);
+		int discHor = discretize(vx, 6, -5, 5);
 
 		// System.out.println("discVer: " + discVer);
-		if (vy != 0) {
-			if (discVer == 0) {
-				ver = "up";
+		
+		// System.out.println("DiscHor: " + discHor);
+		
 
-				System.out.println(vy + " Ver Upp: " + discVer);
-			} else {
-				ver = "down";
-				System.out.println(vy + " Ver down: " + discVer);
-			}
-		} else
-			ver = "";
 
-		if (vx != 0) {
-			if (discHor == 0) {
-				hor = "left";
-			} else {
-				hor = "right";
-			}
-		} else
-			hor = "";
-
-		state = getStateAngle(angle, vx, vy) + ver + hor;
+		state = getStateAngle(angle, vx, vy) +"#"+ discVer + "#"+ discHor;
 		return state;
 	}
 
@@ -83,20 +66,8 @@ public class StateAndReward {
 
 		double reward = 0;
 		reward = getRewardAngle(angle, vy, vx);
-		int vyZero = 0;
-		
-		int discVy = discretize(vy,60,0,0);
-		System.out.println(discVy);
-		
-		if (discVy<30  && discVy > 0) {
-			vyZero = 20;
-			System.out.println("Nu är jag helt stimma mother fucker");
-		}
-
-		// double yReward = 30 - 3 * Math.abs(vy);
-
-		double compReward = reward/1.5 - 10*Math.abs(vx) + vyZero-Math.abs(vy)
-		;
+		double compReward = 1.1*reward - 2*Math.abs(vy) - Math.abs(vx);
+		int finalReward = discretize(compReward, 100, -15,15);
 
 		// System.out.println("compRew: " + compReward + ", reward: " + reward + ", vy
 		// abs: " + 2 * Math.abs(vy));
@@ -155,7 +126,7 @@ public class StateAndReward {
 			return 0;
 		}
 		if (value > max) {
-			return nrValues - 1;
+			return nrValues - 1;			
 		}
 
 		double tempValue = value - min;

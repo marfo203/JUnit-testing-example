@@ -91,21 +91,41 @@ public class QLearningController extends Controller {
 				
 				leftEngine.setBursting(false);
 				rightEngine.setBursting(false);
-				//middleEngine.setBursting(true);
+				middleEngine.setBursting(false);
 			}else if (action == 1) {
 				leftEngine.setBursting(true);
 				rightEngine.setBursting(false);
-				//middleEngine.setBursting(false);
+				middleEngine.setBursting(false);
 				
 			}else if (action == 2) {
 				leftEngine.setBursting(false);
 				rightEngine.setBursting(true);
-				//middleEngine.setBursting(false);
+				middleEngine.setBursting(false);
+				
+			}else if (action == 3) {
+				leftEngine.setBursting(false);
+				rightEngine.setBursting(false);
+				middleEngine.setBursting(true);
+				
+			}else if (action == 4) {
+				leftEngine.setBursting(true);
+				rightEngine.setBursting(true);
+				middleEngine.setBursting(false);
+				
+			}else if (action == 5) {
+				leftEngine.setBursting(false);
+				rightEngine.setBursting(true);
+				middleEngine.setBursting(true);
+				
+			}else if (action == 6) {
+				leftEngine.setBursting(true);
+				rightEngine.setBursting(false);
+				middleEngine.setBursting(true);
 				
 			}else if (action == 3) {
 				leftEngine.setBursting(true);
 				rightEngine.setBursting(true);
-				//middleEngine.setBursting(false);
+				middleEngine.setBursting(true);
 				
 			}
 		
@@ -154,9 +174,10 @@ public class QLearningController extends Controller {
 				
 				double alpha = alpha(Ntable.get(prev_stateaction));
 				
-				double newQ = oldQ + alpha*(previous_reward + (GAMMA_DISCOUNT_FACTOR*getMaxActionQValue(new_state)) - Qtable.get(prev_stateaction));
-				
+				double newQ = oldQ + alpha*(previous_reward + (GAMMA_DISCOUNT_FACTOR*getMaxActionQValue(new_state)) - oldQ);
 				Qtable.put(prev_stateaction, newQ);
+				
+				//System.out.println("prev_stateAction: " + prev_stateaction);
 				//System.out.println("newQ: " + newQ);
 				
 				
@@ -174,6 +195,8 @@ public class QLearningController extends Controller {
 							" vy=" + df.format(vy.getValue()) + " P_STATE: " + previous_state + " P_ACTION: " + previous_action + 
 							" P_REWARD: " + df.format(previous_reward) + " P_QVAL: " + df.format(Qtable.get(prev_stateaction)) + " Tested: "
 							+ Ntable.get(prev_stateaction) + " times.");
+					//System.out.println("ntable: " + Ntable );
+					//System.out.println("qtabel: " + Qtable);
 				}
 				
 				previous_vy = vy.getValue();
